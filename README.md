@@ -1,121 +1,86 @@
+# Demo Web Shop Automation (Playwright + POM)
 
-# Demo Web Shop — UI Automation (Part A)
+## Project Overview
+UI automation for [Demo Web Shop](https://demowebshop.tricentis.com) using the Page Object Model (POM). The suite has 3 scenarios:
 
-Playwright + Page Object Model (POM) automation for
-[https://demowebshop.tricentis.com/](https://demowebshop.tricentis.com/), with
-Allure and HTML reporting.
+| Scenario | Description |
+|---|---|
+| Q1 | Login with invalid credentials and verify the error message |
+| Q2 | Register a new user, verify login state, search a product and add it to cart |
+| Q3 | Full end-to-end flow: search, add to cart and complete checkout |
 
-## 1. What's inside
+## Tech Stack
+- Language: JavaScript (Node.js)
+- Framework: Playwright Test (`@playwright/test`)
+- Design pattern: Page Object Model
+- Reporting: Playwright HTML report and Allure report
+- Version control: Git and GitHub (one branch per question, merged into `main`)
 
-```
-demowebshop-automation/
-├── pages/                      # Page Object classes (one per page)
-│   ├── HomePage.js
-│   ├── LoginPage.js
-│   ├── RegisterPage.js
-│   ├── SearchResultsPage.js
-│   ├── ProductDetailsPage.js
-│   ├── CartPage.js
-│   └── CheckoutPage.js
-├── tests/
-│   ├── q1-invalid-login.spec.js          (Q1 - 10 marks)
-│   ├── q2-register-add-to-cart.spec.js   (Q2 - 15 marks)
-│   └── q3-e2e-search-checkout.spec.js    (Q3 - 25 marks, E2E)
-├── utils/
-│   └── testData.js             # generates a fresh random user each run
-├── playwright.config.js
-├── package.json
-└── README.md
-```
+## Prerequisites
+- Node.js 18 or later
+- Git
+- Java 8 or later (needed only to generate the Allure report)
 
-Each test file is fully independent (it creates its own random user with
-`utils/testData.js`, so re-running never clashes with "email already
-registered" errors), and all three run correctly one after another too.
-
-## 2. Prerequisites
-
-- Node.js 18 or newer installed on your PC ([nodejs.org](https://nodejs.org))
-- Internet connection (tests run against the live demowebshop.tricentis.com site)
-
-## 3. Setup (do this once)
-
+## Setup
 ```bash
-# 1. Unzip the project, then open a terminal inside the folder
-cd demowebshop-automation
-
-# 2. Install dependencies
+git clone https://github.com/SumaiyaGodhuli/playwright-pom-assignment.git
+cd playwright-pom-assignment/demowebshop-automation
 npm install
-
-# 3. Install Playwright's browsers
 npx playwright install
 ```
 
-## 4. Running the tests
+## Project Structure
+```
+demowebshop-automation/
+├── pages/                 # Page Objects
+├── tests/                 # Test specs (Q1, Q2, Q3)
+├── utils/                 # Test data and helpers
+├── playwright.config.js   # Playwright configuration
+└── package.json           # Dependencies and npm scripts
+```
 
-Run all 3 scenarios together (sequentially):
+## Running the Scenarios
+
+### Run each scenario individually
+```bash
+npm run test:q1
+npm run test:q2
+npm run test:q3
+```
+
+### Run all scenarios together
 ```bash
 npm test
 ```
 
-Run one scenario at a time:
-```bash
-npm run test:q1     # Invalid login
-npm run test:q2     # Register + add to cart
-npm run test:q3     # Full E2E: search -> cart -> checkout -> order confirmation
-```
-
-Run with the browser visible (useful while learning/debugging):
+### Run in headed mode (visible browser)
 ```bash
 npm run test:headed
 ```
 
-## 5. Generating reports
+## Generating the Report
 
-**Playwright's built-in HTML report** (auto-generated after every run in
-`playwright-report/`):
+### Playwright HTML report
 ```bash
+npm test
 npm run report:html
 ```
-This opens a browser tab with pass/fail results, screenshots, and traces.
 
-**Allure report:**
+### Allure report
 ```bash
+npm test
 npm run allure:generate
 npm run allure:open
 ```
-- `allure-results/` is the raw data Playwright writes during the run
-  (already configured in `playwright.config.js`).
-- `allure:generate` turns it into a viewable static report in `allure-report/`.
-- `allure:open` serves it in your browser.
+Raw results are stored in `allure-results/` and the generated report in `allure-report/`.
 
-> Allure needs Java installed on your machine (Allure commandline requires a
-> JRE). If `npx allure` complains it can't find Java, install a JRE
-> (e.g. Adoptium Temurin 17) and try again.
+## Branching Strategy
+Each question was developed on its own branch and merged into `main` with `--no-ff`:
+- `q1-invalid-login`
+- `q2-register-cart`
+- `q3-e2e-checkout`
+- `feature/reporting`
+- `docs/readme`
 
-Screenshots are captured automatically for every test (`screenshot: 'on'` in
-`playwright.config.js`), plus each spec file also takes one explicit
-full-page screenshot at its final verification step
-(saved under `test-results/screenshots/`). All of these show up embedded
-inside both the HTML report and the Allure report automatically.
-
-## 6. If a locator doesn't match on your run
-
-The live demo site can occasionally change small details in its HTML. If a
-test fails immediately on an element not found:
-1. Run with `--headed` so you can see the browser.
-2. Right-click the element in question → Inspect (DevTools) → check its
-   `id`/`class`.
-3. Update the matching locator inside the relevant file in `pages/`.
-
-The test logic (steps/flow) will not need to change — only the selector.
-
-## 7. Notes on Q3 (checkout)
-
-Demo Web Shop's checkout is a multi-step "One Page Checkout" (Billing
-Address → Shipping Address → Shipping Method → Payment Method → Payment
-Info → Confirm Order), each step revealed after clicking its own
-"Continue" button. `pages/CheckoutPage.js` walks through all of these in
-`completeCheckout()`. If your account already has a saved address, the
-billing-address form fields won't appear — the code detects this and
-simply clicks Continue.
-
+## Author
+Sumaiya Godhuli
