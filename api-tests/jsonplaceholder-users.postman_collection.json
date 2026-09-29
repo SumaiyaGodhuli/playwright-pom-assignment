@@ -1,0 +1,99 @@
+{
+  "info": {
+    "name": "JSONPlaceholder Users API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://jsonplaceholder.typicode.com" },
+    { "key": "userId", "value": "" },
+    { "key": "userData", "value": "" },
+    { "key": "updatedName", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "GET All Users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "const users = pm.response.json();",
+              "pm.test('Response is a non-empty array', function () { pm.expect(users).to.be.an('array').that.is.not.empty; });",
+              "pm.test('Each user has id, name and email', function () {",
+              "  users.forEach(function (u) {",
+              "    pm.expect(u).to.have.property('id');",
+              "    pm.expect(u).to.have.property('name');",
+              "    pm.expect(u).to.have.property('email');",
+              "  });",
+              "});",
+              "const selected = users[0];",
+              "pm.collectionVariables.set('userId', selected.id);",
+              "pm.collectionVariables.set('userData', JSON.stringify(selected));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        }
+      }
+    },
+    {
+      "name": "PUT Update User",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const user = JSON.parse(pm.collectionVariables.get('userData'));",
+              "const newName = pm.variables.replaceIn('{{$randomFullName}}');",
+              "const newEmail = pm.variables.replaceIn('{{$randomEmail}}');",
+              "const newCompany = pm.variables.replaceIn('{{$randomCompanyName}}');",
+              "user.name = newName;",
+              "user.email = newEmail;",
+              "user.company.name = newCompany;",
+              "pm.collectionVariables.set('updatedName', newName);",
+              "pm.request.body.update(JSON.stringify(user));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Returned ID matches saved userId', function () { pm.expect(res.id).to.eql(Number(pm.collectionVariables.get('userId'))); });",
+              "pm.test('Phone is not empty', function () { pm.expect(res.phone).to.be.a('string').and.not.empty; });",
+              "pm.test('Returned name matches updated name', function () { pm.expect(res.name).to.eql(pm.collectionVariables.get('updatedName')); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "{{userId}}"]
+        }
+      }
+    }
+  ]
+}
