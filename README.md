@@ -9,6 +9,8 @@ UI automation for [Demo Web Shop](https://demowebshop.tricentis.com) using the P
 | Q2 | Register a new user, verify login state, search a product and add it to cart |
 | Q3 | Full end-to-end flow: search, add to cart and complete checkout |
 
+Each test creates its own random user (`utils/testData.js`), so re-running never fails with "email already registered".
+
 ## Tech Stack
 - Language: JavaScript (Node.js)
 - Framework: Playwright Test (`@playwright/test`)
@@ -19,7 +21,8 @@ UI automation for [Demo Web Shop](https://demowebshop.tricentis.com) using the P
 ## Prerequisites
 - Node.js 18 or later
 - Git
-- Java 8 or later (needed only to generate the Allure report)
+- Internet connection (tests run against the live demo site)
+- Java 8 or later (only needed to generate the Allure report)
 
 ## Setup
 ```bash
@@ -32,11 +35,15 @@ npx playwright install
 ## Project Structure
 ```
 demowebshop-automation/
-├── pages/                 # Page Objects
-├── tests/                 # Test specs (Q1, Q2, Q3)
-├── utils/                 # Test data and helpers
-├── playwright.config.js   # Playwright configuration
-└── package.json           # Dependencies and npm scripts
+├── pages/                  # Page Objects (Home, Login, Register, SearchResults,
+│                           #   ProductDetails, Cart, Checkout)
+├── tests/
+│   ├── q1-invalid-login.spec.js
+│   ├── q2-register-add-to-cart.spec.js
+│   └── q3-e2e-search-checkout.spec.js
+├── utils/                  # Test data generator
+├── playwright.config.js    # Playwright configuration
+└── package.json            # Dependencies and npm scripts
 ```
 
 ## Running the Scenarios
@@ -72,7 +79,10 @@ npm test
 npm run allure:generate
 npm run allure:open
 ```
-Raw results are stored in `allure-results/` and the generated report in `allure-report/`.
+Raw results are stored in `allure-results/` and the generated report in `allure-report/`. Screenshots are captured automatically and appear inside both reports.
+
+## Troubleshooting
+If a test fails on "element not found", run `npm run test:headed`, inspect the element in DevTools, and update the locator in the matching file inside `pages/`.
 
 ## Branching Strategy
 Each question was developed on its own branch and merged into `main` with `--no-ff`:
@@ -83,4 +93,4 @@ Each question was developed on its own branch and merged into `main` with `--no-
 - `docs/readme`
 
 ## Author
-Sumaiya Godhuli
+Sumaiya Godhuli - [GitHub](https://github.com/SumaiyaGodhuli)
