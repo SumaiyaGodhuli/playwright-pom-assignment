@@ -41,7 +41,8 @@ demowebshop-automation/
 │   ├── q1-invalid-login.spec.js
 │   ├── q2-register-add-to-cart.spec.js
 │   └── q3-e2e-search-checkout.spec.js
-├── utils/                  # Test data generator
+├── utils/ 
+├── api-tests/              # Postman collection (Newman)                 # Test data generator
 ├── playwright.config.js    # Playwright configuration
 └── package.json            # Dependencies and npm scripts
 ```
@@ -80,6 +81,33 @@ npm run allure:generate
 npm run allure:open
 ```
 Raw results are stored in `allure-results/` and the generated report in `allure-report/`. Screenshots are captured automatically and appear inside both reports.
+
+## API Tests (Part C)
+
+API automation is in the `api-tests/` folder. It is a Postman collection run from the command line with Newman, against https://jsonplaceholder.typicode.com/users.
+
+The collection has 2 requests:
+1. GET all users: validates status 200, non-empty array, and that each user has id, name and email. It saves one user ID.
+2. PUT update user: uses the saved ID in `/users/{id}`, updates only name, email and company.name with dynamic data, and validates status 200, same ID, phone not empty and updated name.
+
+### Run the API tests only
+```bash
+npm run test:api
+```
+
+### Run UI and API tests together (in sequence)
+```bash
+npm run test:all
+```
+
+### API reports
+- HTML report: `api-tests/reports/api-report.html`
+- Allure: API results are written to `allure-results/`, so UI and API show together:
+```bash
+npm run allure:generate
+npm run allure:open
+```
+
 
 ## Troubleshooting
 If a test fails on "element not found", run `npm run test:headed`, inspect the element in DevTools, and update the locator in the matching file inside `pages/`.
