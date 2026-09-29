@@ -1,3 +1,8 @@
+module.exports = defineConfig({
+  testDir: './tests',
+  reporter: [['html', { open: 'never' }]],
+  // ... বাকি settings যেমন আছে তেমন থাকবে
+});
 // playwright.config.js
 // Central configuration for the whole project.
 // - baseURL so tests can use relative paths like page.goto('/login')
