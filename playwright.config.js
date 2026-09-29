@@ -13,8 +13,7 @@ module.exports = defineConfig({
 
   // Each spec file is independent, but we keep workers=1 so the 3 scenarios
   // can also be trusted to run one-after-another without clashing
-  // (e.g. if you reuse the same test account). Increase if you make
-  // each test use its own random data (already done below).
+  // (e.g. if you reuse the same test account).
   fullyParallel: false,
   workers: 1,
   retries: 0,
@@ -36,7 +35,7 @@ module.exports = defineConfig({
     navigationTimeout: 30 * 1000,
 
     // Attach evidence automatically -> shows up inside Allure & HTML report
-    screenshot: 'on',            // screenshot after every test (pass or fail)
+    screenshot: 'on',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
   },
