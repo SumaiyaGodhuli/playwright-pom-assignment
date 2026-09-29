@@ -8,6 +8,8 @@
     "test:q1": "npx playwright test tests/q1-invalid-login.spec.js",
     "test:q2": "npx playwright test tests/q2-register-add-to-cart.spec.js",
     "test:q3": "npx playwright test tests/q3-e2e-search-checkout.spec.js",
+    "test:api": "newman run api-tests/jsonplaceholder-users.postman_collection.json -r cli,htmlextra,allure --reporter-htmlextra-export api-tests/reports/api-report.html --reporter-allure-export allure-results",
+    "test:all": "npm test && npm run test:api",
     "allure:generate": "npx allure generate allure-results --clean -o allure-report",
     "allure:open": "npx allure open allure-report",
     "report:html": "npx playwright show-report"
@@ -15,6 +17,9 @@
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "allure-commandline": "^2.30.0",
-    "allure-playwright": "^3.0.6"
+    "allure-playwright": "^3.0.6",
+    "newman": "^6.2.1",
+    "newman-reporter-allure": "^3.0.0",
+    "newman-reporter-htmlextra": "^1.23.1"
   }
 }
