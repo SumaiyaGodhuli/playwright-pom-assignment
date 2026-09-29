@@ -1,3 +1,4 @@
+
 # Demo Web Shop — UI Automation (Part A)
 
 Playwright + Page Object Model (POM) automation for
@@ -117,3 +118,4 @@ Info → Confirm Order), each step revealed after clicking its own
 `completeCheckout()`. If your account already has a saved address, the
 billing-address form fields won't appear — the code detects this and
 simply clicks Continue.
+
